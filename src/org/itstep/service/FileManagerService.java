@@ -15,7 +15,7 @@ public class FileManagerService {
     private static final String filePath = MAIN_DIR +
             SEPARATOR + "files" + SEPARATOR + "connection_log.txt";
 
-    public static List<ConnectionData> getDataFromFIle() {
+    public static synchronized List<ConnectionData> getDataFromFIle() {
        List<ConnectionData> connections = new ArrayList<>();
 
         try (
@@ -41,8 +41,9 @@ public class FileManagerService {
         return connectionData;
     }
 
-    public static void writeDataToFile(ConnectionData connectionData, boolean append) {
-        try (FileWriter fileWriter = new FileWriter(filePath, append)) {
+    public static synchronized void writeDataToFile(ConnectionData connectionData, boolean append) {
+        try  (FileWriter fileWriter = new FileWriter(filePath, append)){
+
             fileWriter.write(connectionData.getSessionId() + " " + connectionData.getTime() + " "
                     + connectionData.getIp() + " " + connectionData.getUserLogin() + "\n");
             fileWriter.flush();
